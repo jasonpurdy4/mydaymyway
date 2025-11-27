@@ -1,0 +1,11 @@
+{
+  "name": "my-day-my-way",
+  "version": "1.0.0",
+  "description": "A fun health balance app for kids",
+  "scripts": {
+    "start": "npx serve -s . -l $PORT"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
