@@ -362,13 +362,13 @@
                 </div>
                 <span class="change-indicator change-neutral" id="exercise-change">Default</span>
             </div>
-            <div class="slider-value" id="exercise-value">60 min</div>
+            <div class="slider-value" id="exercise-value">30 min</div>
             <div class="slider-container">
                 <div class="slider-labels">
                     <span>15 min</span>
                     <span>120 min</span>
                 </div>
-                <input type="range" id="exercise-slider" min="15" max="120" value="60" step="5">
+                <input type="range" id="exercise-slider" min="15" max="120" value="30" step="5">
             </div>
             <div class="slider-info">
                 <span id="exercise-info">Recommended: 60 min</span>
@@ -386,13 +386,13 @@
                 </div>
                 <span class="change-indicator change-neutral" id="screen-change">Default</span>
             </div>
-            <div class="slider-value" id="screen-value">2 hours</div>
+            <div class="slider-value" id="screen-value">1 hour</div>
             <div class="slider-container">
                 <div class="slider-labels">
                     <span>0 hr</span>
                     <span id="screen-max-label">4 hr</span>
                 </div>
-                <input type="range" id="screen-slider" min="0" max="240" value="120" step="15">
+                <input type="range" id="screen-slider" min="0" max="240" value="60" step="15">
             </div>
             <div class="slider-info">
                 <span id="screen-info">Allowed: 2 hours</span>
@@ -427,7 +427,7 @@
         <div class="relationship-panel" id="relationship-panel">
             <div class="relationship-title">💡 How it works:</div>
             <div class="relationship-text" id="relationship-text">
-                At <strong>60 min</strong> of outside time, you get <strong>2 hours</strong> of screen time and <strong>25g</strong> of sugar. Move any slider to see how they connect!
+                At <strong>30 min</strong> of outside time, you get <strong>1 hour</strong> of screen time and <strong>25g</strong> of sugar. Move any slider to see how they connect!
             </div>
         </div>
 
@@ -442,11 +442,11 @@
             <div class="summary-title">📋 Today's Plan</div>
             <div class="summary-item">
                 <span class="summary-label">🏃 Outside Time</span>
-                <span class="summary-value exercise" id="summary-exercise">60 min</span>
+                <span class="summary-value exercise" id="summary-exercise">30 min</span>
             </div>
             <div class="summary-item">
                 <span class="summary-label">📺 Screen Time</span>
-                <span class="summary-value screen" id="summary-screen">2 hours</span>
+                <span class="summary-value screen" id="summary-screen">1 hour</span>
             </div>
             <div class="summary-item">
                 <span class="summary-label">🍭 Added Sugar</span>
@@ -471,9 +471,9 @@
     <script>
         // Default balanced values
         const DEFAULTS = {
-            exercise: 60,
-            screen: 120,
-            sugar: 25
+            exercise: 30,    // Doctor's minimum for elevated heart rate
+            screen: 60,      // 1 hour (conservative default)
+            sugar: 25        // AHA max recommendation for kids
         };
 
         // Hard limits
@@ -628,9 +628,9 @@
             const allowed = calculateFromExercise(exercise);
             document.getElementById('screen-info').textContent = `Max allowed: ${formatTime(allowed.screen)}`;
             document.getElementById('sugar-info').textContent = `Max allowed: ${allowed.sugar}g`;
-            document.getElementById('exercise-info').textContent = exercise >= 60
-                ? `${exercise - 60} min bonus!`
-                : `${60 - exercise} min below recommended`;
+            document.getElementById('exercise-info').textContent = exercise >= 30
+                ? (exercise > 30 ? `+${exercise - 30} min bonus!` : `Minimum met!`)
+                : `${30 - exercise} min below minimum`;
 
             // Update relationship text
             updateRelationshipText(exercise, screen, sugar);
@@ -673,7 +673,7 @@
             const el = document.getElementById('relationship-text');
 
             if (exercise === DEFAULTS.exercise && screen === DEFAULTS.screen && sugar === DEFAULTS.sugar) {
-                el.innerHTML = `At <strong>60 min</strong> of outside time, you get <strong>2 hours</strong> of screen time and <strong>25g</strong> of sugar. Move any slider to see how they connect!`;
+                el.innerHTML = `At <strong>30 min</strong> of outside time, you get <strong>1 hour</strong> of screen time and <strong>25g</strong> of sugar. Move any slider to see how they connect!`;
             } else if (exercise > DEFAULTS.exercise) {
                 const extraExercise = exercise - DEFAULTS.exercise;
                 const allowed = calculateFromExercise(exercise);
@@ -691,13 +691,13 @@
             const iconEl = document.getElementById('message-icon');
             const textEl = document.getElementById('message-text');
 
-            if (exercise >= 90) {
+            if (exercise >= 60) {
                 iconEl.textContent = '🏆';
                 textEl.textContent = 'Super active day! You earned lots of extras!';
-            } else if (exercise >= 60 && screen <= 120 && sugar <= 25) {
+            } else if (exercise >= 30 && screen <= 60 && sugar <= 25) {
                 iconEl.textContent = '🎯';
                 textEl.textContent = 'Your day is perfectly balanced!';
-            } else if (exercise >= 60) {
+            } else if (exercise >= 45) {
                 iconEl.textContent = '⭐';
                 textEl.textContent = 'Great job getting your exercise in!';
             } else if (screen === 0 && sugar <= 10) {
