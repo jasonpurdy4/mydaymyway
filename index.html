@@ -410,13 +410,13 @@
                 </div>
                 <span class="change-indicator change-neutral" id="sugar-change">Default</span>
             </div>
-            <div class="slider-value" id="sugar-value">25g</div>
+            <div class="slider-value" id="sugar-value">15g</div>
             <div class="slider-container">
                 <div class="slider-labels">
                     <span>0g</span>
                     <span id="sugar-max-label">50g</span>
                 </div>
-                <input type="range" id="sugar-slider" min="0" max="50" value="25" step="5">
+                <input type="range" id="sugar-slider" min="0" max="50" value="15" step="5">
             </div>
             <div class="slider-info">
                 <span id="sugar-info">Allowed: 25g</span>
@@ -427,7 +427,7 @@
         <div class="relationship-panel" id="relationship-panel">
             <div class="relationship-title">💡 How it works:</div>
             <div class="relationship-text" id="relationship-text">
-                At <strong>30 min</strong> of outside time, you get <strong>1 hour</strong> of screen time and <strong>25g</strong> of sugar. Move any slider to see how they connect!
+                At <strong>30 min</strong> of outside time, you get <strong>1 hour</strong> of screen time and <strong>15g</strong> of sugar. Move any slider to see how they connect!
             </div>
         </div>
 
@@ -450,7 +450,7 @@
             </div>
             <div class="summary-item">
                 <span class="summary-label">🍭 Added Sugar</span>
-                <span class="summary-value sugar" id="summary-sugar">25g</span>
+                <span class="summary-value sugar" id="summary-sugar">15g</span>
             </div>
             <div class="screen-warning" id="screen-warning" style="display: none;">
                 ⏰ Remember: Take a break every 2 hours!
@@ -473,7 +473,7 @@
         const DEFAULTS = {
             exercise: 30,    // Doctor's minimum for elevated heart rate
             screen: 60,      // 1 hour (conservative default)
-            sugar: 25        // AHA max recommendation for kids
+            sugar: 15        // Conservative default (AHA max is 25g)
         };
 
         // Hard limits
@@ -673,7 +673,7 @@
             const el = document.getElementById('relationship-text');
 
             if (exercise === DEFAULTS.exercise && screen === DEFAULTS.screen && sugar === DEFAULTS.sugar) {
-                el.innerHTML = `At <strong>30 min</strong> of outside time, you get <strong>1 hour</strong> of screen time and <strong>25g</strong> of sugar. Move any slider to see how they connect!`;
+                el.innerHTML = `At <strong>30 min</strong> of outside time, you get <strong>1 hour</strong> of screen time and <strong>15g</strong> of sugar. Move any slider to see how they connect!`;
             } else if (exercise > DEFAULTS.exercise) {
                 const extraExercise = exercise - DEFAULTS.exercise;
                 const allowed = calculateFromExercise(exercise);
@@ -694,7 +694,7 @@
             if (exercise >= 60) {
                 iconEl.textContent = '🏆';
                 textEl.textContent = 'Super active day! You earned lots of extras!';
-            } else if (exercise >= 30 && screen <= 60 && sugar <= 25) {
+            } else if (exercise >= 30 && screen <= 60 && sugar <= 15) {
                 iconEl.textContent = '🎯';
                 textEl.textContent = 'Your day is perfectly balanced!';
             } else if (exercise >= 45) {
