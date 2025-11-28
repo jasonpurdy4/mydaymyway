@@ -218,9 +218,9 @@
         const screenSlider = document.getElementById('screen-slider');
         const sugarSlider = document.getElementById('sugar-slider');
 
-        exerciseSlider.addEventListener('input', update);
-        screenSlider.addEventListener('input', update);
-        sugarSlider.addEventListener('input', update);
+        exerciseSlider.addEventListener('input', onExerciseChange);
+        screenSlider.addEventListener('input', onScreenChange);
+        sugarSlider.addEventListener('input', onSugarChange);
 
         function formatTime(min) {
             if (min < 60) return `${min} min`;
@@ -229,7 +229,87 @@
             return m === 0 ? `${h} hour${h > 1 ? 's' : ''}` : `${h}h ${m}m`;
         }
 
-        function update() {
+        // Credits: 30 min exercise = 15 min screen = 10g sugar
+        function getCredits(exercise) {
+            return (exercise - DEFAULTS.exercise) / 30;
+        }
+
+        function screenToCredits(screen) {
+            return (screen - DEFAULTS.screen) / 15 * 0.5;
+        }
+
+        function sugarToCredits(sugar) {
+            return (sugar - DEFAULTS.sugar) / 10 * 0.5;
+        }
+
+        function creditsToScreen(credits) {
+            return DEFAULTS.screen + (credits / 0.5) * 15;
+        }
+
+        function creditsToSugar(credits) {
+            return DEFAULTS.sugar + (credits / 0.5) * 10;
+        }
+
+        function onExerciseChange() {
+            // When exercise changes, keep the ratio between screen and sugar the same
+            const exercise = parseInt(exerciseSlider.value);
+            const totalCredits = getCredits(exercise);
+
+            const currentScreen = parseInt(screenSlider.value);
+            const currentSugar = parseInt(sugarSlider.value);
+            const currentScreenCredits = screenToCredits(currentScreen);
+            const currentSugarCredits = sugarToCredits(currentSugar);
+            const currentTotal = currentScreenCredits + currentSugarCredits;
+
+            if (currentTotal <= 0 || totalCredits <= 0) {
+                // At or below defaults, just set to max allowed
+                const half = totalCredits / 2;
+                screenSlider.value = Math.max(0, Math.round(creditsToScreen(Math.max(0, half)) / 15) * 15);
+                sugarSlider.value = Math.max(0, Math.round(creditsToSugar(Math.max(0, half)) / 5) * 5);
+            } else {
+                // Keep same ratio
+                const screenRatio = currentScreenCredits / currentTotal;
+                const sugarRatio = currentSugarCredits / currentTotal;
+                screenSlider.value = Math.max(0, Math.round(creditsToScreen(totalCredits * screenRatio) / 15) * 15);
+                sugarSlider.value = Math.max(0, Math.round(creditsToSugar(totalCredits * sugarRatio) / 5) * 5);
+            }
+
+            updateDisplay();
+        }
+
+        function onScreenChange() {
+            // When screen changes, adjust sugar to use remaining credits
+            const exercise = parseInt(exerciseSlider.value);
+            const screen = parseInt(screenSlider.value);
+
+            const totalCredits = getCredits(exercise);
+            const screenCredits = screenToCredits(screen);
+            const remainingCredits = totalCredits - screenCredits;
+
+            // Cap sugar to remaining credits
+            const maxSugar = Math.max(0, creditsToSugar(remainingCredits));
+            sugarSlider.value = Math.min(parseInt(sugarSlider.value), Math.round(maxSugar / 5) * 5);
+
+            updateDisplay();
+        }
+
+        function onSugarChange() {
+            // When sugar changes, adjust screen to use remaining credits
+            const exercise = parseInt(exerciseSlider.value);
+            const sugar = parseInt(sugarSlider.value);
+
+            const totalCredits = getCredits(exercise);
+            const sugarCredits = sugarToCredits(sugar);
+            const remainingCredits = totalCredits - sugarCredits;
+
+            // Cap screen to remaining credits
+            const maxScreen = Math.max(0, creditsToScreen(remainingCredits));
+            screenSlider.value = Math.min(parseInt(screenSlider.value), Math.round(maxScreen / 15) * 15);
+
+            updateDisplay();
+        }
+
+        function updateDisplay() {
             const exercise = parseInt(exerciseSlider.value);
             const screen = parseInt(screenSlider.value);
             const sugar = parseInt(sugarSlider.value);
@@ -238,25 +318,20 @@
             document.getElementById('screen-value').textContent = formatTime(screen);
             document.getElementById('sugar-value').textContent = `${sugar}g`;
 
-            // Calculate balance: exercise earns, screen/sugar cost
-            // 30 min exercise = 1 credit
-            // 15 min screen above default = 0.5 credit
-            // 10g sugar above default = 0.5 credit
-            const earned = (exercise - DEFAULTS.exercise) / 30;
-            const screenCost = (screen - DEFAULTS.screen) / 15 * 0.5;
-            const sugarCost = (sugar - DEFAULTS.sugar) / 10 * 0.5;
-            const balance = earned - screenCost - sugarCost;
+            const totalCredits = getCredits(exercise);
+            const spent = screenToCredits(screen) + sugarToCredits(sugar);
+            const remaining = totalCredits - spent;
 
             const bar = document.getElementById('balance-bar');
-            if (Math.abs(balance) < 0.1) {
+            if (Math.abs(remaining) < 0.1) {
                 bar.className = 'balance-bar balanced';
                 bar.textContent = '✓ Balanced';
-            } else if (balance > 0) {
+            } else if (remaining > 0) {
                 bar.className = 'balance-bar under';
-                bar.textContent = `+${balance.toFixed(1)} credits to spend`;
+                bar.textContent = `${remaining.toFixed(1)} credits left to spend`;
             } else {
                 bar.className = 'balance-bar over';
-                bar.textContent = `${balance.toFixed(1)} — need more exercise`;
+                bar.textContent = `Over by ${Math.abs(remaining).toFixed(1)} — need more exercise`;
             }
         }
 
@@ -264,10 +339,10 @@
             exerciseSlider.value = DEFAULTS.exercise;
             screenSlider.value = DEFAULTS.screen;
             sugarSlider.value = DEFAULTS.sugar;
-            update();
+            updateDisplay();
         }
 
-        update();
+        updateDisplay();
     </script>
 </body>
 </html>
