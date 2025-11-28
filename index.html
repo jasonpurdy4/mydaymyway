@@ -213,40 +213,62 @@
         }
 
         const SCREEN_OPTIONS = [0, 60, 90, 120];
+        const COOKIE_OPTIONS = [0, 1, 2, 3];
 
         function selectScreen(value) {
+            const oldScreen = state.screen;
             state.screen = value;
-            // Screen changed → update exercise to match
-            updateExerciseFromChoices();
+
+            if (value > oldScreen) {
+                // More screen time (bad) → need more exercise
+                const extraCost = SCREEN_COST[value] - SCREEN_COST[oldScreen];
+                adjustExercise(extraCost);
+            } else if (value < oldScreen) {
+                // Less screen time (good) → could reduce exercise, but keep it simple
+                // User can manually reduce exercise if they want
+            }
             render();
         }
 
         function selectSugar(value) {
+            const oldSugar = state.sugar;
             state.sugar = value;
-            // Cookies changed → update exercise to match
-            updateExerciseFromChoices();
+
+            if (value > oldSugar) {
+                // More cookies (bad) → need more exercise
+                const extraCost = COOKIE_COST[value] - COOKIE_COST[oldSugar];
+                adjustExercise(extraCost);
+            } else if (value < oldSugar) {
+                // Less cookies (good) → reward with more screen time
+                const savedExercise = COOKIE_COST[oldSugar] - COOKIE_COST[value];
+                adjustScreen(savedExercise);
+            }
             render();
         }
 
         function selectExercise(value) {
             const oldExercise = state.exercise;
             state.exercise = value;
-            // Exercise changed → update screen time
-            updateScreenFromExercise(value - oldExercise);
+
+            if (value > oldExercise) {
+                // More exercise (good) → reward with more screen time
+                adjustScreen(value - oldExercise);
+            } else if (value < oldExercise) {
+                // Less exercise → reduce screen time
+                adjustScreen(value - oldExercise);
+            }
             render();
         }
 
-        function updateExerciseFromChoices() {
-            const needed = SCREEN_COST[state.screen] + COOKIE_COST[state.sugar];
-            // Find closest exercise option >= needed
-            state.exercise = EXERCISE_OPTIONS.find(e => e >= needed) || 60;
+        function adjustExercise(amount) {
+            // Add exercise to cover the cost
+            const newExercise = state.exercise + amount;
+            // Find closest valid option >= newExercise
+            state.exercise = EXERCISE_OPTIONS.find(e => e >= newExercise) || 60;
         }
 
-        function updateScreenFromExercise(exerciseChange) {
-            if (exerciseChange === 0) return;
-
-            // Calculate how much screen time we can add/remove
-            // 15 min exercise = 1 screen step (roughly)
+        function adjustScreen(exerciseChange) {
+            // Convert exercise minutes to screen steps (15 min ≈ 1 step)
             const screenSteps = Math.round(exerciseChange / 15);
             const currentIndex = SCREEN_OPTIONS.indexOf(state.screen);
             const newIndex = Math.max(0, Math.min(SCREEN_OPTIONS.length - 1, currentIndex + screenSteps));
