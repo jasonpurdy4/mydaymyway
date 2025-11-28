@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #FF4F00 0%, #FF8C00 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,7 +22,7 @@
         }
 
         .container {
-            max-width: 400px;
+            max-width: 360px;
             width: 100%;
             background: white;
             border-radius: 24px;
@@ -32,7 +32,7 @@
 
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .header h1 {
@@ -40,111 +40,113 @@
             color: #333;
         }
 
-        .row {
+        .slider-group {
+            margin-bottom: 20px;
+        }
+
+        .slider-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .row:last-of-type {
-            border-bottom: none;
-        }
-
-        .row-label {
-            font-size: 28px;
-            width: 40px;
-            text-align: center;
-        }
-
-        .emoji-track {
-            flex: 1;
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
-
-        .emoji {
-            font-size: 24px;
-            opacity: 0.2;
-            transition: opacity 0.2s, transform 0.2s;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .emoji.active {
-            opacity: 1;
-        }
-
-        .emoji:hover {
-            transform: scale(1.2);
-        }
-
-        .row-value {
-            font-size: 14px;
-            font-weight: 600;
-            color: #666;
-            min-width: 50px;
-            text-align: right;
-        }
-
-        .key {
-            margin-top: 20px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .key-title {
-            font-weight: 700;
             margin-bottom: 8px;
+        }
+
+        .slider-label {
+            font-size: 16px;
+            font-weight: 600;
             color: #333;
         }
 
-        .key-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 0;
-        }
-
-        .key-emoji {
+        .slider-value {
             font-size: 18px;
+            font-weight: 700;
         }
 
-        .balance-bar {
-            margin-top: 16px;
-            padding: 10px 14px;
-            border-radius: 10px;
+        .exercise .slider-value { color: #FF4F00; }
+        .screen .slider-value { color: #FF4F00; }
+        .sugar .slider-value { color: #FF4F00; }
+
+        .options {
+            display: flex;
+            gap: 8px;
+        }
+
+        .option {
+            flex: 1;
+            padding: 12px 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
             text-align: center;
-            font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
         }
 
-        .balance-bar.balanced {
-            background: #dcfce7;
-            color: #166534;
+        .option:hover {
+            border-color: #FFB380;
+            background: #FFF4EC;
         }
 
-        .balance-bar.over {
-            background: #fee2e2;
+        .option.selected {
+            border-color: #FF4F00;
+            background: #FFF0E6;
+            color: #CC3F00;
+            font-weight: 700;
+        }
+
+        .exercise .option.selected {
+            border-color: #FF4F00;
+            background: #FFF0E6;
+            color: #CC3F00;
+        }
+
+        .screen .option.selected {
+            border-color: #FF4F00;
+            background: #FFF0E6;
+            color: #CC3F00;
+        }
+
+        .sugar .option.selected {
+            border-color: #FF4F00;
+            background: #FFF0E6;
+            color: #CC3F00;
+        }
+
+        .exercise-note {
+            margin-top: 16px;
+            padding: 12px;
+            background: #FFF0E6;
+            border-radius: 12px;
+            border: 1px solid #FFB380;
+            text-align: center;
+            font-size: 13px;
+            color: #CC3F00;
+        }
+
+        .exercise-note.warning {
+            background: #fef2f2;
+            border-color: #fecaca;
             color: #991b1b;
         }
 
         .reset-btn {
             display: block;
             width: 100%;
-            margin-top: 12px;
-            padding: 10px;
+            margin-top: 16px;
+            padding: 12px;
             font-size: 14px;
-            color: #6366f1;
-            background: #eef2ff;
+            color: #FF4F00;
+            background: #FFF0E6;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background: #FFE0CC;
         }
     </style>
 </head>
@@ -154,134 +156,158 @@
             <h1>✨ My Day, My Way ✨</h1>
         </div>
 
-        <div class="row">
-            <span class="row-label">🏃</span>
-            <div class="emoji-track" id="exercise-track"></div>
-            <span class="row-value" id="exercise-value">30m</span>
+        <!-- Exercise -->
+        <div class="slider-group exercise">
+            <div class="slider-header">
+                <span class="slider-label">🏃 Outside Time</span>
+                <span class="slider-value" id="exercise-value">30 min</span>
+            </div>
+            <div class="options" id="exercise-options">
+                <div class="option" data-value="0">0</div>
+                <div class="option selected" data-value="30">30m</div>
+                <div class="option" data-value="45">45m</div>
+                <div class="option" data-value="60">1hr</div>
+            </div>
         </div>
 
-        <div class="row">
-            <span class="row-label">🎮</span>
-            <div class="emoji-track" id="screen-track"></div>
-            <span class="row-value" id="screen-value">1h</span>
+        <!-- Screen Time -->
+        <div class="slider-group screen">
+            <div class="slider-header">
+                <span class="slider-label">🎮 Screen Time</span>
+                <span class="slider-value" id="screen-value">1 hour</span>
+            </div>
+            <div class="options" id="screen-options">
+                <div class="option" data-value="0">0</div>
+                <div class="option selected" data-value="60">1hr</div>
+                <div class="option" data-value="90">1.5hr</div>
+                <div class="option" data-value="120">2hr</div>
+            </div>
         </div>
 
-        <div class="row">
-            <span class="row-label">🍪</span>
-            <div class="emoji-track" id="sugar-track"></div>
-            <span class="row-value" id="sugar-value">15g</span>
+        <!-- Cookies -->
+        <div class="slider-group sugar">
+            <div class="slider-header">
+                <span class="slider-label">🍪 Cookies</span>
+                <span class="slider-value" id="sugar-value">1</span>
+            </div>
+            <div class="options" id="sugar-options">
+                <div class="option" data-value="0">0</div>
+                <div class="option selected" data-value="1">1</div>
+                <div class="option" data-value="2">2</div>
+            </div>
         </div>
 
-        <div class="balance-bar balanced" id="balance-bar">
-            ✓ Balanced
-        </div>
-
-        <div class="key">
-            <div class="key-title">Key:</div>
-            <div class="key-item"><span class="key-emoji">🏃</span> = 15 min outside</div>
-            <div class="key-item"><span class="key-emoji">🎮</span> = 15 min screen time</div>
-            <div class="key-item"><span class="key-emoji">🍪</span> = 5g added sugar</div>
+        <div class="exercise-note" id="note">
+            ✓ Balanced! 30 min outside earns 1hr screen + 1 cookie
         </div>
 
         <button class="reset-btn" onclick="reset()">Reset</button>
     </div>
 
     <script>
-        // Units: 🏃=15min, 🎮=15min, 🍪=5g
-        // Defaults: 2🏃 (30min), 4🎮 (1hr), 3🍪 (15g)
-        // Exchange: 2🏃 extra = 1🎮 OR 1🍪
+        // Exercise costs:
+        // Screen: 0=0, 1hr=15min, 1.5hr=22min, 2hr=30min
+        // Cookies: 0=0, 1=15min, 2=30min
 
-        const MAX = { exercise: 8, screen: 8, sugar: 6 }; // max emojis
-        const DEFAULTS = { exercise: 2, screen: 4, sugar: 3 };
+        const SCREEN_COST = { 0: 0, 60: 15, 90: 22, 120: 30 };
+        const COOKIE_COST = { 0: 0, 1: 15, 2: 30 };
+        const EXERCISE_OPTIONS = [0, 30, 45, 60];
 
-        let state = { ...DEFAULTS };
+        let state = {
+            exercise: 30,
+            screen: 60,
+            sugar: 1
+        };
 
-        function render() {
-            renderTrack('exercise', '🏃', state.exercise, MAX.exercise);
-            renderTrack('screen', '🎮', state.screen, MAX.screen);
-            renderTrack('sugar', '🍪', state.sugar, MAX.sugar);
-
-            document.getElementById('exercise-value').textContent = `${state.exercise * 15}m`;
-            document.getElementById('screen-value').textContent = formatTime(state.screen * 15);
-            document.getElementById('sugar-value').textContent = `${state.sugar * 5}g`;
-
-            updateBalance();
+        function init() {
+            document.querySelectorAll('#screen-options .option').forEach(opt => {
+                opt.addEventListener('click', () => selectScreen(parseInt(opt.dataset.value)));
+            });
+            document.querySelectorAll('#sugar-options .option').forEach(opt => {
+                opt.addEventListener('click', () => selectSugar(parseInt(opt.dataset.value)));
+            });
+            document.querySelectorAll('#exercise-options .option').forEach(opt => {
+                opt.addEventListener('click', () => selectExercise(parseInt(opt.dataset.value)));
+            });
+            render();
         }
 
-        function renderTrack(id, emoji, count, max) {
-            const track = document.getElementById(`${id}-track`);
-            track.innerHTML = '';
-            for (let i = 0; i < max; i++) {
-                const span = document.createElement('span');
-                span.className = `emoji ${i < count ? 'active' : ''}`;
-                span.textContent = emoji;
-                span.onclick = () => setCount(id, i + 1);
-                track.appendChild(span);
+        function selectScreen(value) {
+            state.screen = value;
+            updateExerciseFromChoices();
+            render();
+        }
+
+        function selectSugar(value) {
+            state.sugar = value;
+            updateExerciseFromChoices();
+            render();
+        }
+
+        function selectExercise(value) {
+            state.exercise = value;
+            // Don't auto-update screen/sugar when exercise is manually changed
+            render();
+        }
+
+        function updateExerciseFromChoices() {
+            const needed = SCREEN_COST[state.screen] + COOKIE_COST[state.sugar];
+            // Find closest exercise option >= needed
+            state.exercise = EXERCISE_OPTIONS.find(e => e >= needed) || 60;
+        }
+
+        function getRequiredExercise() {
+            return SCREEN_COST[state.screen] + COOKIE_COST[state.sugar];
+        }
+
+        function render() {
+            // Update selected states
+            document.querySelectorAll('#exercise-options .option').forEach(opt => {
+                opt.classList.toggle('selected', parseInt(opt.dataset.value) === state.exercise);
+            });
+            document.querySelectorAll('#screen-options .option').forEach(opt => {
+                opt.classList.toggle('selected', parseInt(opt.dataset.value) === state.screen);
+            });
+            document.querySelectorAll('#sugar-options .option').forEach(opt => {
+                opt.classList.toggle('selected', parseInt(opt.dataset.value) === state.sugar);
+            });
+
+            // Update values
+            document.getElementById('exercise-value').textContent = state.exercise === 0 ? '0' : `${state.exercise} min`;
+            document.getElementById('screen-value').textContent = formatTime(state.screen);
+            document.getElementById('sugar-value').textContent = state.sugar;
+
+            // Update note
+            const needed = getRequiredExercise();
+            const note = document.getElementById('note');
+
+            if (state.exercise >= needed) {
+                note.className = 'exercise-note';
+                if (state.exercise > needed) {
+                    const extra = state.exercise - needed;
+                    note.textContent = `✓ ${extra} extra min of exercise banked!`;
+                } else {
+                    note.textContent = `✓ Balanced!`;
+                }
+            } else {
+                note.className = 'exercise-note warning';
+                note.textContent = `Need ${needed - state.exercise} more min of exercise`;
             }
         }
 
         function formatTime(min) {
+            if (min === 0) return '0';
             if (min < 60) return `${min}m`;
-            const h = Math.floor(min / 60);
-            const m = min % 60;
-            return m === 0 ? `${h}h` : `${h}h${m}m`;
-        }
-
-        function setCount(type, count) {
-            const oldValue = state[type];
-            state[type] = count;
-
-            if (type === 'exercise') {
-                // Exercise changed - adjust screen and sugar proportionally
-                const creditChange = (count - oldValue) / 2; // 2 runners = 1 credit
-                if (creditChange > 0) {
-                    // Earned credits - split between screen and sugar
-                    state.screen = Math.min(MAX.screen, state.screen + Math.ceil(creditChange / 2));
-                    state.sugar = Math.min(MAX.sugar, state.sugar + Math.floor(creditChange / 2));
-                } else if (creditChange < 0) {
-                    // Lost credits - reduce screen and sugar
-                    const loss = Math.abs(creditChange);
-                    state.screen = Math.max(0, state.screen - Math.ceil(loss / 2));
-                    state.sugar = Math.max(0, state.sugar - Math.floor(loss / 2));
-                }
-            } else if (type === 'screen') {
-                // Screen changed - adjust exercise needed
-                const creditChange = (count - oldValue);
-                state.exercise = Math.min(MAX.exercise, Math.max(1, state.exercise + creditChange * 2));
-            } else if (type === 'sugar') {
-                // Sugar changed - adjust exercise needed
-                const creditChange = (count - oldValue);
-                state.exercise = Math.min(MAX.exercise, Math.max(1, state.exercise + creditChange * 2));
-            }
-
-            render();
-        }
-
-        function updateBalance() {
-            const exerciseCredits = (state.exercise - DEFAULTS.exercise) / 2;
-            const screenCost = (state.screen - DEFAULTS.screen);
-            const sugarCost = (state.sugar - DEFAULTS.sugar);
-            const balance = exerciseCredits - screenCost - sugarCost;
-
-            const bar = document.getElementById('balance-bar');
-            if (Math.abs(balance) < 0.1) {
-                bar.className = 'balance-bar balanced';
-                bar.textContent = '✓ Balanced';
-            } else if (balance > 0) {
-                bar.className = 'balance-bar balanced';
-                bar.textContent = `✓ ${balance.toFixed(0)} extra credits!`;
-            } else {
-                bar.className = 'balance-bar over';
-                bar.textContent = `Need ${Math.abs(balance * 2).toFixed(0)} more 🏃`;
-            }
+            const h = min / 60;
+            return h % 1 === 0 ? `${h} hour${h > 1 ? 's' : ''}` : `${h}hr`;
         }
 
         function reset() {
-            state = { ...DEFAULTS };
+            state = { exercise: 30, screen: 60, sugar: 1 };
             render();
         }
 
-        render();
+        init();
     </script>
 </body>
 </html>
