@@ -166,12 +166,12 @@
         <div class="slider-group exercise">
             <div class="slider-header">
                 <span class="slider-label">🏃 Outside Time</span>
-                <span class="slider-value" id="exercise-value">30 min</span>
+                <span class="slider-value" id="exercise-value">45 min</span>
             </div>
             <div class="options" id="exercise-options">
                 <div class="option" data-value="0">0</div>
-                <div class="option selected" data-value="30">30m</div>
-                <div class="option" data-value="45">45m</div>
+                <div class="option" data-value="30">30m</div>
+                <div class="option selected" data-value="45">45m</div>
                 <div class="option" data-value="60">1hr</div>
             </div>
         </div>
@@ -180,13 +180,13 @@
         <div class="slider-group screen">
             <div class="slider-header">
                 <span class="slider-label">🎮 Screen Time</span>
-                <span class="slider-value" id="screen-value">1 hour</span>
+                <span class="slider-value" id="screen-value">2 hours</span>
             </div>
             <div class="options" id="screen-options">
                 <div class="option" data-value="0">0</div>
-                <div class="option selected" data-value="60">1hr</div>
-                <div class="option" data-value="90">1.5hr</div>
-                <div class="option" data-value="120">2hr</div>
+                <div class="option selected" data-value="120">2hr</div>
+                <div class="option" data-value="150">2.5hr</div>
+                <div class="option" data-value="180">3hr</div>
             </div>
         </div>
 
@@ -213,16 +213,16 @@
 
     <script>
         // Exercise costs:
-        // Screen: 0=0, 1hr=15min, 1.5hr=22min, 2hr=30min
-        // Cookies: 0=0, 1=15min, 2=30min
+        // Screen: 0=0, 2hr=30min, 2.5hr=38min, 3hr=45min
+        // Cookies: 0=0, 1=15min, 2=30min, 3=45min
 
-        const SCREEN_COST = { 0: 0, 60: 15, 90: 22, 120: 30 };
+        const SCREEN_COST = { 0: 0, 120: 30, 150: 38, 180: 45 };
         const COOKIE_COST = { 0: 0, 1: 15, 2: 30, 3: 45 };
         const EXERCISE_OPTIONS = [0, 30, 45, 60];
 
         let state = {
-            exercise: 30,
-            screen: 60,
+            exercise: 45,
+            screen: 120,
             sugar: 1
         };
 
@@ -239,7 +239,7 @@
             render();
         }
 
-        const SCREEN_OPTIONS = [0, 60, 90, 120];
+        const SCREEN_OPTIONS = [0, 120, 150, 180];
         const COOKIE_OPTIONS = [0, 1, 2, 3];
         const MAX_EXERCISE = 60;
 
@@ -354,7 +354,7 @@
         }
 
         function reset() {
-            state = { exercise: 30, screen: 60, sugar: 1 };
+            state = { exercise: 45, screen: 120, sugar: 1 };
             render();
         }
 
