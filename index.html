@@ -15,12 +15,15 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
         .container {
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 400px;
+            width: 100%;
             background: white;
             border-radius: 24px;
             padding: 24px;
@@ -29,375 +32,134 @@
 
         .header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .header h1 {
-            font-size: 28px;
+            font-size: 24px;
             color: #333;
-            margin-bottom: 4px;
         }
 
-        .header p {
-            color: #666;
-            font-size: 16px;
+        .sliders {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        .slider-section {
-            background: #f8f9fa;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            transition: all 0.3s ease;
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .slider-section.highlight {
-            box-shadow: 0 0 0 3px #fbbf24;
+        .slider-icon {
+            font-size: 24px;
+            width: 32px;
+            text-align: center;
+        }
+
+        .slider-content {
+            flex: 1;
         }
 
         .slider-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .slider-header-left {
-            display: flex;
             align-items: center;
-            gap: 10px;
+            margin-bottom: 4px;
         }
 
-        .slider-icon {
-            font-size: 28px;
-        }
-
-        .slider-title {
-            font-size: 18px;
+        .slider-label {
+            font-size: 14px;
             font-weight: 600;
-            color: #333;
+            color: #555;
         }
 
         .slider-value {
-            font-size: 32px;
+            font-size: 16px;
             font-weight: 700;
-            text-align: center;
-            margin: 12px 0;
-            transition: all 0.3s ease;
         }
 
         .exercise .slider-value { color: #22c55e; }
         .screen .slider-value { color: #3b82f6; }
         .sugar .slider-value { color: #ec4899; }
 
-        .slider-container {
-            position: relative;
-            padding: 10px 0;
-        }
-
-        .slider-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 8px;
-        }
-
         input[type="range"] {
             width: 100%;
-            height: 12px;
-            border-radius: 6px;
+            height: 8px;
+            border-radius: 4px;
             appearance: none;
             outline: none;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .exercise input[type="range"] {
-            background: linear-gradient(to right, #fecaca 0%, #22c55e 40%, #15803d 100%);
+            background: linear-gradient(to right, #fee2e2 0%, #22c55e 30%, #15803d 100%);
         }
 
         .screen input[type="range"] {
-            background: linear-gradient(to right, #22c55e 0%, #fbbf24 50%, #ef4444 100%);
+            background: linear-gradient(to right, #dcfce7 0%, #fbbf24 50%, #ef4444 100%);
         }
 
         .sugar input[type="range"] {
-            background: linear-gradient(to right, #22c55e 0%, #fbbf24 50%, #ef4444 100%);
+            background: linear-gradient(to right, #dcfce7 0%, #fbbf24 50%, #ef4444 100%);
         }
 
         input[type="range"]::-webkit-slider-thumb {
             appearance: none;
-            width: 28px;
-            height: 28px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: white;
-            border: 4px solid #333;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            border: 3px solid #333;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
             cursor: grab;
-            transition: transform 0.2s;
         }
 
         input[type="range"]::-webkit-slider-thumb:active {
             cursor: grabbing;
-            transform: scale(1.1);
         }
 
-        .slider-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            font-size: 14px;
-        }
-
-        .change-indicator {
-            padding: 4px 12px;
-            border-radius: 20px;
+        .balance-bar {
+            margin-top: 20px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            text-align: center;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 14px;
+            transition: all 0.3s;
         }
 
-        .change-positive {
+        .balance-bar.balanced {
             background: #dcfce7;
             color: #166534;
         }
 
-        .change-negative {
+        .balance-bar.over {
             background: #fee2e2;
             color: #991b1b;
         }
 
-        .change-neutral {
-            background: #f3f4f6;
-            color: #6b7280;
-        }
-
-        .link-indicator {
-            text-align: center;
-            padding: 8px;
-            font-size: 24px;
-            color: #9ca3af;
-        }
-
-        .link-indicator.active {
-            color: #f59e0b;
-            animation: pulse 0.5s ease;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .relationship-panel {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            border: 2px solid #fbbf24;
-        }
-
-        .relationship-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #92400e;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .relationship-text {
-            font-size: 15px;
-            color: #78350f;
-            line-height: 1.6;
-        }
-
-        .relationship-text strong {
-            color: #92400e;
-        }
-
-        .message-panel {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-            border-radius: 16px;
-            margin-bottom: 16px;
-            border: 2px solid #6ee7b7;
-        }
-
-        .message-icon {
-            font-size: 48px;
-            margin-bottom: 8px;
-        }
-
-        .message-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: #065f46;
-        }
-
-        .summary-panel {
-            background: #f1f5f9;
-            border-radius: 16px;
-            padding: 20px;
-        }
-
-        .summary-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: #334155;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .summary-item:last-child {
-            border-bottom: none;
-        }
-
-        .summary-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 16px;
-        }
-
-        .summary-value {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .summary-value.exercise { color: #22c55e; }
-        .summary-value.screen { color: #3b82f6; }
-        .summary-value.sugar { color: #ec4899; }
-
-        .screen-warning {
-            margin-top: 12px;
-            padding: 10px 14px;
-            background: #fef3c7;
-            border-radius: 10px;
-            font-size: 14px;
-            color: #92400e;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+        .balance-bar.under {
+            background: #dbeafe;
+            color: #1e40af;
         }
 
         .reset-btn {
             display: block;
             width: 100%;
-            margin-top: 20px;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 600;
+            margin-top: 12px;
+            padding: 10px;
+            font-size: 14px;
             color: #6366f1;
             background: #eef2ff;
-            border: 2px solid #c7d2fe;
-            border-radius: 12px;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .reset-btn:hover {
             background: #e0e7ff;
-            border-color: #a5b4fc;
-        }
-
-        .how-it-works {
-            margin-top: 16px;
-            padding: 16px;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 1px dashed #cbd5e1;
-        }
-
-        .how-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #64748b;
-            margin-bottom: 8px;
-        }
-
-        .how-text {
-            font-size: 13px;
-            color: #94a3b8;
-            line-height: 1.5;
-        }
-
-        .credits-display {
-            background: white;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-
-        .credits-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            font-size: 14px;
-        }
-
-        .credits-row.total {
-            border-top: 2px solid #fbbf24;
-            margin-top: 8px;
-            padding-top: 12px;
-            font-weight: 700;
-        }
-
-        .credits-value {
-            font-weight: 700;
-            color: #22c55e;
-        }
-
-        .credits-value.spent {
-            color: #f59e0b;
-        }
-
-        .credits-value.negative {
-            color: #ef4444;
-        }
-
-        .credits-value.positive {
-            color: #22c55e;
-        }
-
-        .credits-hint {
-            font-size: 13px;
-            color: #92400e;
-            text-align: center;
-            font-style: italic;
-        }
-
-        .over-budget {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
-            border-color: #f87171 !important;
-        }
-
-        .over-budget .credits-hint {
-            color: #991b1b;
-            font-weight: 600;
-        }
-
-        @media (max-width: 400px) {
-            .container {
-                padding: 16px;
-            }
-            .header h1 {
-                font-size: 24px;
-            }
-            .slider-value {
-                font-size: 28px;
-            }
         }
     </style>
 </head>
@@ -405,419 +167,107 @@
     <div class="container">
         <div class="header">
             <h1>✨ My Day, My Way ✨</h1>
-            <p>Slide to plan your balanced day!</p>
         </div>
 
-        <!-- Exercise Slider -->
-        <div class="slider-section exercise" id="exercise-section">
-            <div class="slider-header">
-                <div class="slider-header-left">
-                    <span class="slider-icon">🏃</span>
-                    <span class="slider-title">Outside Time</span>
+        <div class="sliders">
+            <div class="slider-row exercise">
+                <span class="slider-icon">🏃</span>
+                <div class="slider-content">
+                    <div class="slider-header">
+                        <span class="slider-label">Outside Time</span>
+                        <span class="slider-value" id="exercise-value">30 min</span>
+                    </div>
+                    <input type="range" id="exercise-slider" min="15" max="120" value="30" step="5">
                 </div>
-                <span class="change-indicator change-neutral" id="exercise-change">Default</span>
             </div>
-            <div class="slider-value" id="exercise-value">30 min</div>
-            <div class="slider-container">
-                <div class="slider-labels">
-                    <span>15 min</span>
-                    <span>120 min</span>
-                </div>
-                <input type="range" id="exercise-slider" min="15" max="120" value="30" step="5">
-            </div>
-            <div class="slider-info">
-                <span id="exercise-info">Recommended: 60 min</span>
-            </div>
-        </div>
 
-        <div class="link-indicator" id="link1">🔗</div>
+            <div class="slider-row screen">
+                <span class="slider-icon">📺</span>
+                <div class="slider-content">
+                    <div class="slider-header">
+                        <span class="slider-label">Screen Time</span>
+                        <span class="slider-value" id="screen-value">1 hour</span>
+                    </div>
+                    <input type="range" id="screen-slider" min="0" max="240" value="60" step="15">
+                </div>
+            </div>
 
-        <!-- Screen Time Slider -->
-        <div class="slider-section screen" id="screen-section">
-            <div class="slider-header">
-                <div class="slider-header-left">
-                    <span class="slider-icon">📺</span>
-                    <span class="slider-title">Screen Time</span>
+            <div class="slider-row sugar">
+                <span class="slider-icon">🍭</span>
+                <div class="slider-content">
+                    <div class="slider-header">
+                        <span class="slider-label">Added Sugar</span>
+                        <span class="slider-value" id="sugar-value">15g</span>
+                    </div>
+                    <input type="range" id="sugar-slider" min="0" max="50" value="15" step="5">
                 </div>
-                <span class="change-indicator change-neutral" id="screen-change">Default</span>
-            </div>
-            <div class="slider-value" id="screen-value">1 hour</div>
-            <div class="slider-container">
-                <div class="slider-labels">
-                    <span>0 hr</span>
-                    <span id="screen-max-label">4 hr</span>
-                </div>
-                <input type="range" id="screen-slider" min="0" max="240" value="60" step="15">
-            </div>
-            <div class="slider-info">
-                <span id="screen-info">Allowed: 2 hours</span>
             </div>
         </div>
 
-        <div class="link-indicator" id="link2">🔗</div>
-
-        <!-- Sugar Slider -->
-        <div class="slider-section sugar" id="sugar-section">
-            <div class="slider-header">
-                <div class="slider-header-left">
-                    <span class="slider-icon">🍭</span>
-                    <span class="slider-title">Added Sugar</span>
-                </div>
-                <span class="change-indicator change-neutral" id="sugar-change">Default</span>
-            </div>
-            <div class="slider-value" id="sugar-value">15g</div>
-            <div class="slider-container">
-                <div class="slider-labels">
-                    <span>0g</span>
-                    <span id="sugar-max-label">50g</span>
-                </div>
-                <input type="range" id="sugar-slider" min="0" max="50" value="15" step="5">
-            </div>
-            <div class="slider-info">
-                <span id="sugar-info">Allowed: 25g</span>
-            </div>
+        <div class="balance-bar balanced" id="balance-bar">
+            ✓ Balanced
         </div>
 
-        <!-- Credits Panel -->
-        <div class="relationship-panel" id="credits-panel">
-            <div class="relationship-title">⭐ Your Credits</div>
-            <div class="credits-display">
-                <div class="credits-row">
-                    <span class="credits-label">Earned from exercise:</span>
-                    <span class="credits-value" id="credits-earned">0</span>
-                </div>
-                <div class="credits-row">
-                    <span class="credits-label">Spent on screen time:</span>
-                    <span class="credits-value spent" id="credits-screen">0</span>
-                </div>
-                <div class="credits-row">
-                    <span class="credits-label">Spent on sugar:</span>
-                    <span class="credits-value spent" id="credits-sugar">0</span>
-                </div>
-                <div class="credits-row total">
-                    <span class="credits-label">Remaining:</span>
-                    <span class="credits-value" id="credits-remaining">0</span>
-                </div>
-            </div>
-            <div class="credits-hint" id="credits-hint">
-                Do more exercise to earn credits, then choose how to spend them!
-            </div>
-        </div>
-
-        <!-- Message Panel -->
-        <div class="message-panel">
-            <div class="message-icon" id="message-icon">🎯</div>
-            <div class="message-text" id="message-text">Your day is perfectly balanced!</div>
-        </div>
-
-        <!-- Summary Panel -->
-        <div class="summary-panel">
-            <div class="summary-title">📋 Today's Plan</div>
-            <div class="summary-item">
-                <span class="summary-label">🏃 Outside Time</span>
-                <span class="summary-value exercise" id="summary-exercise">30 min</span>
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">📺 Screen Time</span>
-                <span class="summary-value screen" id="summary-screen">1 hour</span>
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">🍭 Added Sugar</span>
-                <span class="summary-value sugar" id="summary-sugar">15g</span>
-            </div>
-            <div class="screen-warning" id="screen-warning" style="display: none;">
-                ⏰ Remember: Take a break every 2 hours!
-            </div>
-        </div>
-
-        <button class="reset-btn" onclick="resetToDefault()">🔄 Reset to Default</button>
-
-        <div class="how-it-works">
-            <div class="how-title">📖 The Trade-offs:</div>
-            <div class="how-text">
-                Every 30 min of extra outside time = +15 min screen time OR +10g sugar<br>
-                Less screen time or sugar = less outside time needed!
-            </div>
-        </div>
+        <button class="reset-btn" onclick="reset()">Reset</button>
     </div>
 
     <script>
-        // Default balanced values
-        const DEFAULTS = {
-            exercise: 30,    // Doctor's minimum for elevated heart rate
-            screen: 60,      // 1 hour (conservative default)
-            sugar: 15        // Conservative default (AHA max is 25g)
-        };
+        const DEFAULTS = { exercise: 30, screen: 60, sugar: 15 };
 
-        // Hard limits
-        const LIMITS = {
-            exercise: { min: 15, max: 120 },
-            screen: { min: 0, max: 240 },
-            sugar: { min: 0, max: 50 }
-        };
-
-        // Exchange rates (based on user's 1:0.5 for exercise:screen)
-        // 30 min exercise = 15 min screen = 10g sugar
-        const RATES = {
-            exercisePerScreenMin: 2,      // 2 min exercise per 1 min screen
-            exercisePerSugarG: 3,         // 3 min exercise per 1g sugar
-            screenPerSugarG: 1.5          // 1.5 min screen per 1g sugar
-        };
-
-        // Get elements
         const exerciseSlider = document.getElementById('exercise-slider');
         const screenSlider = document.getElementById('screen-slider');
         const sugarSlider = document.getElementById('sugar-slider');
 
-        let lastChanged = null;
+        exerciseSlider.addEventListener('input', update);
+        screenSlider.addEventListener('input', update);
+        sugarSlider.addEventListener('input', update);
 
-        // Add event listeners
-        exerciseSlider.addEventListener('input', () => handleSliderChange('exercise'));
-        screenSlider.addEventListener('input', () => handleSliderChange('screen'));
-        sugarSlider.addEventListener('input', () => handleSliderChange('sugar'));
-
-        function formatTime(minutes) {
-            if (minutes < 60) return `${minutes} min`;
-            const hours = Math.floor(minutes / 60);
-            const mins = minutes % 60;
-            if (mins === 0) return `${hours} hour${hours > 1 ? 's' : ''}`;
-            return `${hours}h ${mins}m`;
+        function formatTime(min) {
+            if (min < 60) return `${min} min`;
+            const h = Math.floor(min / 60);
+            const m = min % 60;
+            return m === 0 ? `${h} hour${h > 1 ? 's' : ''}` : `${h}h ${m}m`;
         }
 
-        function clamp(value, min, max) {
-            return Math.max(min, Math.min(max, value));
-        }
-
-        function calculateFromExercise(exerciseMin) {
-            // Given exercise, calculate allowed screen and sugar
-            const exerciseDiff = exerciseMin - DEFAULTS.exercise;
-
-            // Each 30 min extra exercise = +15 min screen
-            const screenBonus = (exerciseDiff / 30) * 15;
-            const allowedScreen = DEFAULTS.screen + screenBonus;
-
-            // Each 30 min extra exercise = +10g sugar
-            const sugarBonus = (exerciseDiff / 30) * 10;
-            const allowedSugar = DEFAULTS.sugar + sugarBonus;
-
-            return {
-                screen: clamp(Math.round(allowedScreen / 15) * 15, LIMITS.screen.min, LIMITS.screen.max),
-                sugar: clamp(Math.round(allowedSugar / 5) * 5, LIMITS.sugar.min, LIMITS.sugar.max)
-            };
-        }
-
-        function calculateRequiredExercise(screenMin, sugarG) {
-            // Given desired screen and sugar, calculate required exercise
-            const screenDiff = screenMin - DEFAULTS.screen;
-            const sugarDiff = sugarG - DEFAULTS.sugar;
-
-            // Screen: each 15 min over default needs 30 min exercise
-            const exerciseForScreen = (screenDiff / 15) * 30;
-
-            // Sugar: each 10g over default needs 30 min exercise
-            const exerciseForSugar = (sugarDiff / 10) * 30;
-
-            const totalExercise = DEFAULTS.exercise + exerciseForScreen + exerciseForSugar;
-
-            return clamp(Math.round(totalExercise / 5) * 5, LIMITS.exercise.min, LIMITS.exercise.max);
-        }
-
-        function calculateCredits(exercise) {
-            // Each 30 min above default earns 1 credit
-            // Each 30 min below default costs 1 credit
-            const diff = exercise - DEFAULTS.exercise;
-            return diff / 30;
-        }
-
-        function calculateCreditsSpent(screen, sugar) {
-            // Screen: each 15 min above default costs 0.5 credits
-            const screenCredits = (screen - DEFAULTS.screen) / 15 * 0.5;
-            // Sugar: each 10g above default costs 0.5 credits
-            const sugarCredits = (sugar - DEFAULTS.sugar) / 10 * 0.5;
-            return { screenCredits, sugarCredits, total: screenCredits + sugarCredits };
-        }
-
-        function handleSliderChange(changed) {
-            lastChanged = changed;
-
+        function update() {
             const exercise = parseInt(exerciseSlider.value);
             const screen = parseInt(screenSlider.value);
             const sugar = parseInt(sugarSlider.value);
 
-            // Calculate available credits from exercise
-            const availableCredits = calculateCredits(exercise);
-            const spent = calculateCreditsSpent(screen, sugar);
-
-            if (changed === 'exercise') {
-                // Exercise changed - keep screen and sugar where they are
-                // User decides how to spend their credits
-                animateLink('link1');
-                animateLink('link2');
-
-            } else if (changed === 'screen') {
-                // Screen changed - check if over budget
-                animateLink('link1');
-
-            } else if (changed === 'sugar') {
-                // Sugar changed - check if over budget
-                animateLink('link2');
-            }
-
-            updateDisplay();
-        }
-
-        function animateLink(linkId) {
-            const link = document.getElementById(linkId);
-            link.classList.add('active');
-            setTimeout(() => link.classList.remove('active'), 500);
-        }
-
-        function updateDisplay() {
-            const exercise = parseInt(exerciseSlider.value);
-            const screen = parseInt(screenSlider.value);
-            const sugar = parseInt(sugarSlider.value);
-
-            // Update values
             document.getElementById('exercise-value').textContent = `${exercise} min`;
             document.getElementById('screen-value').textContent = formatTime(screen);
             document.getElementById('sugar-value').textContent = `${sugar}g`;
 
-            // Update summary
-            document.getElementById('summary-exercise').textContent = `${exercise} min`;
-            document.getElementById('summary-screen').textContent = formatTime(screen);
-            document.getElementById('summary-sugar').textContent = `${sugar}g`;
+            // Calculate balance: exercise earns, screen/sugar cost
+            // 30 min exercise = 1 credit
+            // 15 min screen above default = 0.5 credit
+            // 10g sugar above default = 0.5 credit
+            const earned = (exercise - DEFAULTS.exercise) / 30;
+            const screenCost = (screen - DEFAULTS.screen) / 15 * 0.5;
+            const sugarCost = (sugar - DEFAULTS.sugar) / 10 * 0.5;
+            const balance = earned - screenCost - sugarCost;
 
-            // Update change indicators
-            updateChangeIndicator('exercise', exercise, DEFAULTS.exercise, true);
-            updateChangeIndicator('screen', screen, DEFAULTS.screen, false);
-            updateChangeIndicator('sugar', sugar, DEFAULTS.sugar, false);
-
-            // Calculate and display credits
-            const earned = calculateCredits(exercise);
-            const spent = calculateCreditsSpent(screen, sugar);
-            const remaining = earned - spent.total;
-
-            document.getElementById('credits-earned').textContent = earned >= 0 ? `+${earned.toFixed(1)}` : earned.toFixed(1);
-            document.getElementById('credits-earned').className = `credits-value ${earned >= 0 ? 'positive' : 'negative'}`;
-
-            document.getElementById('credits-screen').textContent = spent.screenCredits > 0 ? `-${spent.screenCredits.toFixed(1)}` : '0';
-            document.getElementById('credits-sugar').textContent = spent.sugarCredits > 0 ? `-${spent.sugarCredits.toFixed(1)}` : '0';
-
-            document.getElementById('credits-remaining').textContent = remaining >= 0 ? `+${remaining.toFixed(1)}` : remaining.toFixed(1);
-            document.getElementById('credits-remaining').className = `credits-value ${remaining >= 0 ? 'positive' : 'negative'}`;
-
-            // Update credits panel styling based on budget
-            const creditsPanel = document.getElementById('credits-panel');
-            const hintEl = document.getElementById('credits-hint');
-
-            if (remaining < 0) {
-                creditsPanel.classList.add('over-budget');
-                hintEl.textContent = `Over budget! Add ${Math.ceil(Math.abs(remaining) * 30)} more minutes of exercise, or reduce screen/sugar.`;
-            } else if (remaining > 0) {
-                creditsPanel.classList.remove('over-budget');
-                hintEl.textContent = `You have ${remaining.toFixed(1)} credits left to spend on screen time or sugar!`;
+            const bar = document.getElementById('balance-bar');
+            if (Math.abs(balance) < 0.1) {
+                bar.className = 'balance-bar balanced';
+                bar.textContent = '✓ Balanced';
+            } else if (balance > 0) {
+                bar.className = 'balance-bar under';
+                bar.textContent = `+${balance.toFixed(1)} credits to spend`;
             } else {
-                creditsPanel.classList.remove('over-budget');
-                hintEl.textContent = `Perfectly balanced! Your credits match your choices.`;
-            }
-
-            // Update slider info
-            document.getElementById('exercise-info').textContent = exercise >= 30
-                ? (exercise > 30 ? `Earns ${earned.toFixed(1)} credits` : `Minimum met`)
-                : `${30 - exercise} min below minimum`;
-            document.getElementById('screen-info').textContent = screen > DEFAULTS.screen
-                ? `Costs ${spent.screenCredits.toFixed(1)} credits`
-                : `Default (no credits needed)`;
-            document.getElementById('sugar-info').textContent = sugar > DEFAULTS.sugar
-                ? `Costs ${spent.sugarCredits.toFixed(1)} credits`
-                : `Default (no credits needed)`;
-
-            // Update message
-            updateMessage(exercise, screen, sugar, remaining);
-
-            // Show screen warning if over 2 hours
-            document.getElementById('screen-warning').style.display = screen > 120 ? 'flex' : 'none';
-        }
-
-        function updateChangeIndicator(type, value, defaultVal, moreIsGood) {
-            const el = document.getElementById(`${type}-change`);
-            const diff = value - defaultVal;
-
-            if (diff === 0) {
-                el.textContent = 'Default';
-                el.className = 'change-indicator change-neutral';
-            } else if ((diff > 0 && moreIsGood) || (diff < 0 && !moreIsGood)) {
-                el.textContent = moreIsGood ? `+${Math.abs(diff)}` : `-${Math.abs(diff)}`;
-                el.className = 'change-indicator change-positive';
-            } else {
-                el.textContent = moreIsGood ? `-${Math.abs(diff)}` : `+${Math.abs(diff)}`;
-                el.className = 'change-indicator change-negative';
-            }
-
-            // Add units
-            if (type === 'exercise' || type === 'screen') {
-                if (diff !== 0) {
-                    const unit = type === 'screen' && Math.abs(diff) >= 60 ? 'hr' : 'min';
-                    const val = unit === 'hr' ? Math.abs(diff) / 60 : Math.abs(diff);
-                    el.textContent = (diff > 0 ? '+' : '-') + val + ' ' + unit;
-                }
-            } else if (type === 'sugar' && diff !== 0) {
-                el.textContent = (diff > 0 ? '+' : '-') + Math.abs(diff) + 'g';
+                bar.className = 'balance-bar over';
+                bar.textContent = `${balance.toFixed(1)} — need more exercise`;
             }
         }
 
-        function updateRelationshipText(exercise, screen, sugar) {
-            const el = document.getElementById('relationship-text');
-
-            if (exercise === DEFAULTS.exercise && screen === DEFAULTS.screen && sugar === DEFAULTS.sugar) {
-                el.innerHTML = `At <strong>30 min</strong> of outside time, you get <strong>1 hour</strong> of screen time and <strong>15g</strong> of sugar. Move any slider to see how they connect!`;
-            } else if (exercise > DEFAULTS.exercise) {
-                const extraExercise = exercise - DEFAULTS.exercise;
-                const allowed = calculateFromExercise(exercise);
-                el.innerHTML = `<strong>+${extraExercise} min</strong> extra outside time unlocks up to <strong>${formatTime(allowed.screen)}</strong> screen time and <strong>${allowed.sugar}g</strong> sugar!`;
-            } else if (exercise < DEFAULTS.exercise) {
-                const lessExercise = DEFAULTS.exercise - exercise;
-                const allowed = calculateFromExercise(exercise);
-                el.innerHTML = `With only <strong>${exercise} min</strong> outside, you can have <strong>${formatTime(allowed.screen)}</strong> screen time and <strong>${allowed.sugar}g</strong> sugar.`;
-            } else {
-                el.innerHTML = `You're choosing <strong>${formatTime(screen)}</strong> screen and <strong>${sugar}g</strong> sugar, which needs <strong>${exercise} min</strong> outside time.`;
-            }
-        }
-
-        function updateMessage(exercise, screen, sugar, remaining) {
-            const iconEl = document.getElementById('message-icon');
-            const textEl = document.getElementById('message-text');
-
-            if (remaining < 0) {
-                iconEl.textContent = '⚠️';
-                textEl.textContent = 'Over budget! Adjust your choices.';
-            } else if (exercise >= 60) {
-                iconEl.textContent = '🏆';
-                textEl.textContent = 'Super active day! Lots of credits to spend!';
-            } else if (remaining === 0 && exercise >= 30) {
-                iconEl.textContent = '🎯';
-                textEl.textContent = 'Perfectly balanced!';
-            } else if (remaining > 0 && exercise >= 30) {
-                iconEl.textContent = '⭐';
-                textEl.textContent = 'Looking good! Credits available to spend.';
-            } else if (exercise < 30) {
-                iconEl.textContent = '💪';
-                textEl.textContent = 'Need at least 30 min outside time!';
-            } else {
-                iconEl.textContent = '👍';
-                textEl.textContent = 'Good choices!';
-            }
-        }
-
-        function resetToDefault() {
+        function reset() {
             exerciseSlider.value = DEFAULTS.exercise;
             screenSlider.value = DEFAULTS.screen;
             sugarSlider.value = DEFAULTS.sugar;
-            updateDisplay();
+            update();
         }
 
-        // Initialize
-        updateDisplay();
+        update();
     </script>
 </body>
 </html>
