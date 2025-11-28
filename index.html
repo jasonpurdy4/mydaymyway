@@ -115,23 +115,6 @@
             color: #CC3F00;
         }
 
-        .exercise-note {
-            margin-top: 16px;
-            padding: 12px;
-            background: #FFF0E6;
-            border-radius: 12px;
-            border: 1px solid #FFB380;
-            text-align: center;
-            font-size: 13px;
-            color: #CC3F00;
-        }
-
-        .exercise-note.warning {
-            background: #fef2f2;
-            border-color: #fecaca;
-            color: #991b1b;
-        }
-
         .reset-btn {
             display: block;
             width: 100%;
@@ -196,10 +179,6 @@
                 <div class="option" data-value="2">2</div>
                 <div class="option" data-value="3">3</div>
             </div>
-        </div>
-
-        <div class="exercise-note" id="note">
-            ✓ Balanced! 30 min outside earns 1hr screen + 1 cookie
         </div>
 
         <button class="reset-btn" onclick="reset()">Reset</button>
@@ -274,10 +253,6 @@
             state.screen = SCREEN_OPTIONS[newIndex];
         }
 
-        function getRequiredExercise() {
-            return SCREEN_COST[state.screen] + COOKIE_COST[state.sugar];
-        }
-
         function render() {
             // Update selected states
             document.querySelectorAll('#exercise-options .option').forEach(opt => {
@@ -294,23 +269,6 @@
             document.getElementById('exercise-value').textContent = state.exercise === 0 ? '0' : `${state.exercise} min`;
             document.getElementById('screen-value').textContent = formatTime(state.screen);
             document.getElementById('sugar-value').textContent = state.sugar;
-
-            // Update note
-            const needed = getRequiredExercise();
-            const note = document.getElementById('note');
-
-            if (state.exercise >= needed) {
-                note.className = 'exercise-note';
-                if (state.exercise > needed) {
-                    const extra = state.exercise - needed;
-                    note.textContent = `✓ ${extra} extra min of exercise banked!`;
-                } else {
-                    note.textContent = `✓ Balanced!`;
-                }
-            } else {
-                note.className = 'exercise-note warning';
-                note.textContent = `Need ${needed - state.exercise} more min of exercise`;
-            }
         }
 
         function formatTime(min) {
