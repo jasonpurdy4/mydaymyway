@@ -36,98 +36,92 @@
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 22px;
             color: #333;
         }
 
-        .sliders {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .slider-row {
+        .row {
             display: flex;
             align-items: center;
             gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
         }
 
-        .slider-icon {
-            font-size: 24px;
-            width: 32px;
+        .row:last-of-type {
+            border-bottom: none;
+        }
+
+        .row-label {
+            font-size: 28px;
+            width: 40px;
             text-align: center;
         }
 
-        .slider-content {
+        .emoji-track {
             flex: 1;
-        }
-
-        .slider-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 4px;
+            gap: 4px;
+            flex-wrap: wrap;
         }
 
-        .slider-label {
+        .emoji {
+            font-size: 24px;
+            opacity: 0.2;
+            transition: opacity 0.2s, transform 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .emoji.active {
+            opacity: 1;
+        }
+
+        .emoji:hover {
+            transform: scale(1.2);
+        }
+
+        .row-value {
             font-size: 14px;
             font-weight: 600;
-            color: #555;
+            color: #666;
+            min-width: 50px;
+            text-align: right;
         }
 
-        .slider-value {
-            font-size: 16px;
+        .key {
+            margin-top: 20px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .key-title {
             font-weight: 700;
+            margin-bottom: 8px;
+            color: #333;
         }
 
-        .exercise .slider-value { color: #22c55e; }
-        .screen .slider-value { color: #3b82f6; }
-        .sugar .slider-value { color: #ec4899; }
-
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            border-radius: 4px;
-            appearance: none;
-            outline: none;
-            cursor: pointer;
+        .key-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
         }
 
-        .exercise input[type="range"] {
-            background: linear-gradient(to right, #fee2e2 0%, #22c55e 30%, #15803d 100%);
-        }
-
-        .screen input[type="range"] {
-            background: linear-gradient(to right, #dcfce7 0%, #fbbf24 50%, #ef4444 100%);
-        }
-
-        .sugar input[type="range"] {
-            background: linear-gradient(to right, #dcfce7 0%, #fbbf24 50%, #ef4444 100%);
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: white;
-            border: 3px solid #333;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            cursor: grab;
-        }
-
-        input[type="range"]::-webkit-slider-thumb:active {
-            cursor: grabbing;
+        .key-emoji {
+            font-size: 18px;
         }
 
         .balance-bar {
-            margin-top: 20px;
-            padding: 12px 16px;
-            border-radius: 12px;
+            margin-top: 16px;
+            padding: 10px 14px;
+            border-radius: 10px;
             text-align: center;
             font-weight: 600;
             font-size: 14px;
-            transition: all 0.3s;
         }
 
         .balance-bar.balanced {
@@ -138,11 +132,6 @@
         .balance-bar.over {
             background: #fee2e2;
             color: #991b1b;
-        }
-
-        .balance-bar.under {
-            background: #dbeafe;
-            color: #1e40af;
         }
 
         .reset-btn {
@@ -157,10 +146,6 @@
             border-radius: 8px;
             cursor: pointer;
         }
-
-        .reset-btn:hover {
-            background: #e0e7ff;
-        }
     </style>
 </head>
 <body>
@@ -169,180 +154,134 @@
             <h1>✨ My Day, My Way ✨</h1>
         </div>
 
-        <div class="sliders">
-            <div class="slider-row exercise">
-                <span class="slider-icon">🏃</span>
-                <div class="slider-content">
-                    <div class="slider-header">
-                        <span class="slider-label">Outside Time</span>
-                        <span class="slider-value" id="exercise-value">30 min</span>
-                    </div>
-                    <input type="range" id="exercise-slider" min="15" max="120" value="30" step="5">
-                </div>
-            </div>
+        <div class="row">
+            <span class="row-label">🏃</span>
+            <div class="emoji-track" id="exercise-track"></div>
+            <span class="row-value" id="exercise-value">30m</span>
+        </div>
 
-            <div class="slider-row screen">
-                <span class="slider-icon">📺</span>
-                <div class="slider-content">
-                    <div class="slider-header">
-                        <span class="slider-label">Screen Time</span>
-                        <span class="slider-value" id="screen-value">1 hour</span>
-                    </div>
-                    <input type="range" id="screen-slider" min="0" max="240" value="60" step="15">
-                </div>
-            </div>
+        <div class="row">
+            <span class="row-label">🎮</span>
+            <div class="emoji-track" id="screen-track"></div>
+            <span class="row-value" id="screen-value">1h</span>
+        </div>
 
-            <div class="slider-row sugar">
-                <span class="slider-icon">🍭</span>
-                <div class="slider-content">
-                    <div class="slider-header">
-                        <span class="slider-label">Added Sugar</span>
-                        <span class="slider-value" id="sugar-value">15g</span>
-                    </div>
-                    <input type="range" id="sugar-slider" min="0" max="50" value="15" step="5">
-                </div>
-            </div>
+        <div class="row">
+            <span class="row-label">🍪</span>
+            <div class="emoji-track" id="sugar-track"></div>
+            <span class="row-value" id="sugar-value">15g</span>
         </div>
 
         <div class="balance-bar balanced" id="balance-bar">
             ✓ Balanced
         </div>
 
+        <div class="key">
+            <div class="key-title">Key:</div>
+            <div class="key-item"><span class="key-emoji">🏃</span> = 15 min outside</div>
+            <div class="key-item"><span class="key-emoji">🎮</span> = 15 min screen time</div>
+            <div class="key-item"><span class="key-emoji">🍪</span> = 5g added sugar</div>
+        </div>
+
         <button class="reset-btn" onclick="reset()">Reset</button>
     </div>
 
     <script>
-        const DEFAULTS = { exercise: 30, screen: 60, sugar: 15 };
+        // Units: 🏃=15min, 🎮=15min, 🍪=5g
+        // Defaults: 2🏃 (30min), 4🎮 (1hr), 3🍪 (15g)
+        // Exchange: 2🏃 extra = 1🎮 OR 1🍪
 
-        const exerciseSlider = document.getElementById('exercise-slider');
-        const screenSlider = document.getElementById('screen-slider');
-        const sugarSlider = document.getElementById('sugar-slider');
+        const MAX = { exercise: 8, screen: 8, sugar: 6 }; // max emojis
+        const DEFAULTS = { exercise: 2, screen: 4, sugar: 3 };
 
-        exerciseSlider.addEventListener('input', onExerciseChange);
-        screenSlider.addEventListener('input', onScreenChange);
-        sugarSlider.addEventListener('input', onSugarChange);
+        let state = { ...DEFAULTS };
+
+        function render() {
+            renderTrack('exercise', '🏃', state.exercise, MAX.exercise);
+            renderTrack('screen', '🎮', state.screen, MAX.screen);
+            renderTrack('sugar', '🍪', state.sugar, MAX.sugar);
+
+            document.getElementById('exercise-value').textContent = `${state.exercise * 15}m`;
+            document.getElementById('screen-value').textContent = formatTime(state.screen * 15);
+            document.getElementById('sugar-value').textContent = `${state.sugar * 5}g`;
+
+            updateBalance();
+        }
+
+        function renderTrack(id, emoji, count, max) {
+            const track = document.getElementById(`${id}-track`);
+            track.innerHTML = '';
+            for (let i = 0; i < max; i++) {
+                const span = document.createElement('span');
+                span.className = `emoji ${i < count ? 'active' : ''}`;
+                span.textContent = emoji;
+                span.onclick = () => setCount(id, i + 1);
+                track.appendChild(span);
+            }
+        }
 
         function formatTime(min) {
-            if (min < 60) return `${min} min`;
+            if (min < 60) return `${min}m`;
             const h = Math.floor(min / 60);
             const m = min % 60;
-            return m === 0 ? `${h} hour${h > 1 ? 's' : ''}` : `${h}h ${m}m`;
+            return m === 0 ? `${h}h` : `${h}h${m}m`;
         }
 
-        // Credits: 30 min exercise = 15 min screen = 10g sugar
-        function getCredits(exercise) {
-            return (exercise - DEFAULTS.exercise) / 30;
-        }
+        function setCount(type, count) {
+            const oldValue = state[type];
+            state[type] = count;
 
-        function screenToCredits(screen) {
-            return (screen - DEFAULTS.screen) / 15 * 0.5;
-        }
-
-        function sugarToCredits(sugar) {
-            return (sugar - DEFAULTS.sugar) / 10 * 0.5;
-        }
-
-        function creditsToScreen(credits) {
-            return DEFAULTS.screen + (credits / 0.5) * 15;
-        }
-
-        function creditsToSugar(credits) {
-            return DEFAULTS.sugar + (credits / 0.5) * 10;
-        }
-
-        function onExerciseChange() {
-            // When exercise changes, keep the ratio between screen and sugar the same
-            const exercise = parseInt(exerciseSlider.value);
-            const totalCredits = getCredits(exercise);
-
-            const currentScreen = parseInt(screenSlider.value);
-            const currentSugar = parseInt(sugarSlider.value);
-            const currentScreenCredits = screenToCredits(currentScreen);
-            const currentSugarCredits = sugarToCredits(currentSugar);
-            const currentTotal = currentScreenCredits + currentSugarCredits;
-
-            if (currentTotal <= 0 || totalCredits <= 0) {
-                // At or below defaults, just set to max allowed
-                const half = totalCredits / 2;
-                screenSlider.value = Math.max(0, Math.round(creditsToScreen(Math.max(0, half)) / 15) * 15);
-                sugarSlider.value = Math.max(0, Math.round(creditsToSugar(Math.max(0, half)) / 5) * 5);
-            } else {
-                // Keep same ratio
-                const screenRatio = currentScreenCredits / currentTotal;
-                const sugarRatio = currentSugarCredits / currentTotal;
-                screenSlider.value = Math.max(0, Math.round(creditsToScreen(totalCredits * screenRatio) / 15) * 15);
-                sugarSlider.value = Math.max(0, Math.round(creditsToSugar(totalCredits * sugarRatio) / 5) * 5);
+            if (type === 'exercise') {
+                // Exercise changed - adjust screen and sugar proportionally
+                const creditChange = (count - oldValue) / 2; // 2 runners = 1 credit
+                if (creditChange > 0) {
+                    // Earned credits - split between screen and sugar
+                    state.screen = Math.min(MAX.screen, state.screen + Math.ceil(creditChange / 2));
+                    state.sugar = Math.min(MAX.sugar, state.sugar + Math.floor(creditChange / 2));
+                } else if (creditChange < 0) {
+                    // Lost credits - reduce screen and sugar
+                    const loss = Math.abs(creditChange);
+                    state.screen = Math.max(0, state.screen - Math.ceil(loss / 2));
+                    state.sugar = Math.max(0, state.sugar - Math.floor(loss / 2));
+                }
+            } else if (type === 'screen') {
+                // Screen changed - adjust exercise needed
+                const creditChange = (count - oldValue);
+                state.exercise = Math.min(MAX.exercise, Math.max(1, state.exercise + creditChange * 2));
+            } else if (type === 'sugar') {
+                // Sugar changed - adjust exercise needed
+                const creditChange = (count - oldValue);
+                state.exercise = Math.min(MAX.exercise, Math.max(1, state.exercise + creditChange * 2));
             }
 
-            updateDisplay();
+            render();
         }
 
-        function onScreenChange() {
-            // When screen changes, adjust sugar to use remaining credits
-            const exercise = parseInt(exerciseSlider.value);
-            const screen = parseInt(screenSlider.value);
-
-            const totalCredits = getCredits(exercise);
-            const screenCredits = screenToCredits(screen);
-            const remainingCredits = totalCredits - screenCredits;
-
-            // Cap sugar to remaining credits
-            const maxSugar = Math.max(0, creditsToSugar(remainingCredits));
-            sugarSlider.value = Math.min(parseInt(sugarSlider.value), Math.round(maxSugar / 5) * 5);
-
-            updateDisplay();
-        }
-
-        function onSugarChange() {
-            // When sugar changes, adjust screen to use remaining credits
-            const exercise = parseInt(exerciseSlider.value);
-            const sugar = parseInt(sugarSlider.value);
-
-            const totalCredits = getCredits(exercise);
-            const sugarCredits = sugarToCredits(sugar);
-            const remainingCredits = totalCredits - sugarCredits;
-
-            // Cap screen to remaining credits
-            const maxScreen = Math.max(0, creditsToScreen(remainingCredits));
-            screenSlider.value = Math.min(parseInt(screenSlider.value), Math.round(maxScreen / 15) * 15);
-
-            updateDisplay();
-        }
-
-        function updateDisplay() {
-            const exercise = parseInt(exerciseSlider.value);
-            const screen = parseInt(screenSlider.value);
-            const sugar = parseInt(sugarSlider.value);
-
-            document.getElementById('exercise-value').textContent = `${exercise} min`;
-            document.getElementById('screen-value').textContent = formatTime(screen);
-            document.getElementById('sugar-value').textContent = `${sugar}g`;
-
-            const totalCredits = getCredits(exercise);
-            const spent = screenToCredits(screen) + sugarToCredits(sugar);
-            const remaining = totalCredits - spent;
+        function updateBalance() {
+            const exerciseCredits = (state.exercise - DEFAULTS.exercise) / 2;
+            const screenCost = (state.screen - DEFAULTS.screen);
+            const sugarCost = (state.sugar - DEFAULTS.sugar);
+            const balance = exerciseCredits - screenCost - sugarCost;
 
             const bar = document.getElementById('balance-bar');
-            if (Math.abs(remaining) < 0.1) {
+            if (Math.abs(balance) < 0.1) {
                 bar.className = 'balance-bar balanced';
                 bar.textContent = '✓ Balanced';
-            } else if (remaining > 0) {
-                bar.className = 'balance-bar under';
-                bar.textContent = `${remaining.toFixed(1)} credits left to spend`;
+            } else if (balance > 0) {
+                bar.className = 'balance-bar balanced';
+                bar.textContent = `✓ ${balance.toFixed(0)} extra credits!`;
             } else {
                 bar.className = 'balance-bar over';
-                bar.textContent = `Over by ${Math.abs(remaining).toFixed(1)} — need more exercise`;
+                bar.textContent = `Need ${Math.abs(balance * 2).toFixed(0)} more 🏃`;
             }
         }
 
         function reset() {
-            exerciseSlider.value = DEFAULTS.exercise;
-            screenSlider.value = DEFAULTS.screen;
-            sugarSlider.value = DEFAULTS.sugar;
-            updateDisplay();
+            state = { ...DEFAULTS };
+            render();
         }
 
-        updateDisplay();
+        render();
     </script>
 </body>
 </html>
