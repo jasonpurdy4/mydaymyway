@@ -154,6 +154,22 @@
             20%, 60% { transform: translateX(-5px); }
             40%, 80% { transform: translateX(5px); }
         }
+
+        .screen-warning {
+            margin-top: 8px;
+            padding: 8px;
+            background: #fef3cd;
+            border-radius: 8px;
+            border: 1px solid #ffc107;
+            text-align: center;
+            font-size: 12px;
+            color: #856404;
+            display: none;
+        }
+
+        .screen-warning.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -173,6 +189,8 @@
                 <div class="option selected" data-value="30">30m</div>
                 <div class="option" data-value="45">45m</div>
                 <div class="option" data-value="60">1hr</div>
+                <div class="option" data-value="75">1:15</div>
+                <div class="option" data-value="90">1:30</div>
             </div>
         </div>
 
@@ -187,6 +205,10 @@
                 <div class="option selected" data-value="120">2hr</div>
                 <div class="option" data-value="150">2.5hr</div>
                 <div class="option" data-value="180">3hr</div>
+                <div class="option" data-value="210">3.5hr</div>
+            </div>
+            <div class="screen-warning" id="screen-warning">
+                ⚠️ Take a break every 2 hours!
             </div>
         </div>
 
@@ -201,6 +223,7 @@
                 <div class="option selected" data-value="1">1</div>
                 <div class="option" data-value="2">2</div>
                 <div class="option" data-value="3">3</div>
+                <div class="option" data-value="4">4</div>
             </div>
         </div>
 
@@ -213,12 +236,12 @@
 
     <script>
         // Exercise costs:
-        // Screen: 0=0, 2hr=15min, 2.5hr=22min, 3hr=30min
-        // Cookies: 0=0, 1=15min, 2=30min, 3=45min
+        // Screen: 0=0, 2hr=15min, 2.5hr=22min, 3hr=30min, 3.5hr=37min
+        // Cookies: 0=0, 1=15min, 2=30min, 3=45min, 4=60min
 
-        const SCREEN_COST = { 0: 0, 120: 15, 150: 22, 180: 30 };
-        const COOKIE_COST = { 0: 0, 1: 15, 2: 30, 3: 45 };
-        const EXERCISE_OPTIONS = [0, 30, 45, 60];
+        const SCREEN_COST = { 0: 0, 120: 15, 150: 22, 180: 30, 210: 37 };
+        const COOKIE_COST = { 0: 0, 1: 15, 2: 30, 3: 45, 4: 60 };
+        const EXERCISE_OPTIONS = [0, 30, 45, 60, 75, 90];
 
         let state = {
             exercise: 30,
@@ -239,9 +262,9 @@
             render();
         }
 
-        const SCREEN_OPTIONS = [0, 120, 150, 180];
-        const COOKIE_OPTIONS = [0, 1, 2, 3];
-        const MAX_EXERCISE = 60;
+        const SCREEN_OPTIONS = [0, 120, 150, 180, 210];
+        const COOKIE_OPTIONS = [0, 1, 2, 3, 4];
+        const MAX_EXERCISE = 90;
 
         function showError() {
             const error = document.getElementById('error');
@@ -344,6 +367,9 @@
             document.getElementById('exercise-value').textContent = state.exercise === 0 ? '0' : `${state.exercise} min`;
             document.getElementById('screen-value').textContent = formatTime(state.screen);
             document.getElementById('sugar-value').textContent = state.sugar;
+
+            // Show warning for 2.5hr+ screen time
+            document.getElementById('screen-warning').classList.toggle('show', state.screen >= 150);
         }
 
         function formatTime(min) {
