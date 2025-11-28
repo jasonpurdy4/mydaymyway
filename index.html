@@ -233,21 +233,27 @@
             render();
         }
 
+        const SCREEN_OPTIONS = [0, 60, 90, 120];
+
         function selectScreen(value) {
             state.screen = value;
+            // Screen changed → update exercise to match
             updateExerciseFromChoices();
             render();
         }
 
         function selectSugar(value) {
             state.sugar = value;
+            // Cookies changed → update exercise to match
             updateExerciseFromChoices();
             render();
         }
 
         function selectExercise(value) {
+            const oldExercise = state.exercise;
             state.exercise = value;
-            // Don't auto-update screen/sugar when exercise is manually changed
+            // Exercise changed → update screen time
+            updateScreenFromExercise(value - oldExercise);
             render();
         }
 
@@ -255,6 +261,17 @@
             const needed = SCREEN_COST[state.screen] + COOKIE_COST[state.sugar];
             // Find closest exercise option >= needed
             state.exercise = EXERCISE_OPTIONS.find(e => e >= needed) || 60;
+        }
+
+        function updateScreenFromExercise(exerciseChange) {
+            if (exerciseChange === 0) return;
+
+            // Calculate how much screen time we can add/remove
+            // 15 min exercise = 1 screen step (roughly)
+            const screenSteps = Math.round(exerciseChange / 15);
+            const currentIndex = SCREEN_OPTIONS.indexOf(state.screen);
+            const newIndex = Math.max(0, Math.min(SCREEN_OPTIONS.length - 1, currentIndex + screenSteps));
+            state.screen = SCREEN_OPTIONS[newIndex];
         }
 
         function getRequiredExercise() {
