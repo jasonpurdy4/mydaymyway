@@ -131,6 +131,29 @@
         .reset-btn:hover {
             background: #FFE0CC;
         }
+
+        .error-msg {
+            margin-top: 16px;
+            padding: 12px;
+            background: #fef2f2;
+            border-radius: 12px;
+            border: 1px solid #fecaca;
+            text-align: center;
+            font-size: 13px;
+            color: #991b1b;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
     </style>
 </head>
 <body>
@@ -181,6 +204,10 @@
             </div>
         </div>
 
+        <div class="error-msg" id="error">
+            Already at max exercise! Reduce cookies or screen time first.
+        </div>
+
         <button class="reset-btn" onclick="reset()">Reset</button>
     </div>
 
@@ -214,34 +241,60 @@
 
         const SCREEN_OPTIONS = [0, 60, 90, 120];
         const COOKIE_OPTIONS = [0, 1, 2, 3];
+        const MAX_EXERCISE = 60;
+
+        function showError() {
+            const error = document.getElementById('error');
+            error.classList.remove('show');
+            // Trigger reflow to restart animation
+            void error.offsetWidth;
+            error.classList.add('show');
+            setTimeout(() => error.classList.remove('show'), 3000);
+        }
 
         function selectScreen(value) {
             const oldScreen = state.screen;
-            state.screen = value;
 
             if (value > oldScreen) {
                 // More screen time (bad) → need more exercise
                 const extraCost = SCREEN_COST[value] - SCREEN_COST[oldScreen];
+                const newExercise = state.exercise + extraCost;
+
+                if (newExercise > MAX_EXERCISE) {
+                    showError();
+                    return; // Reject the change
+                }
+
+                state.screen = value;
                 adjustExercise(extraCost);
-            } else if (value < oldScreen) {
-                // Less screen time (good) → could reduce exercise, but keep it simple
-                // User can manually reduce exercise if they want
+            } else {
+                state.screen = value;
             }
             render();
         }
 
         function selectSugar(value) {
             const oldSugar = state.sugar;
-            state.sugar = value;
 
             if (value > oldSugar) {
                 // More cookies (bad) → need more exercise
                 const extraCost = COOKIE_COST[value] - COOKIE_COST[oldSugar];
+                const newExercise = state.exercise + extraCost;
+
+                if (newExercise > MAX_EXERCISE) {
+                    showError();
+                    return; // Reject the change
+                }
+
+                state.sugar = value;
                 adjustExercise(extraCost);
             } else if (value < oldSugar) {
                 // Less cookies (good) → reward with more screen time
+                state.sugar = value;
                 const savedExercise = COOKIE_COST[oldSugar] - COOKIE_COST[value];
                 adjustScreen(savedExercise);
+            } else {
+                state.sugar = value;
             }
             render();
         }
@@ -264,7 +317,7 @@
             // Add exercise to cover the cost
             const newExercise = state.exercise + amount;
             // Find closest valid option >= newExercise
-            state.exercise = EXERCISE_OPTIONS.find(e => e >= newExercise) || 60;
+            state.exercise = EXERCISE_OPTIONS.find(e => e >= newExercise) || MAX_EXERCISE;
         }
 
         function adjustScreen(exerciseChange) {
