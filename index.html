@@ -333,6 +333,61 @@
             line-height: 1.5;
         }
 
+        .credits-display {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .credits-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 14px;
+        }
+
+        .credits-row.total {
+            border-top: 2px solid #fbbf24;
+            margin-top: 8px;
+            padding-top: 12px;
+            font-weight: 700;
+        }
+
+        .credits-value {
+            font-weight: 700;
+            color: #22c55e;
+        }
+
+        .credits-value.spent {
+            color: #f59e0b;
+        }
+
+        .credits-value.negative {
+            color: #ef4444;
+        }
+
+        .credits-value.positive {
+            color: #22c55e;
+        }
+
+        .credits-hint {
+            font-size: 13px;
+            color: #92400e;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .over-budget {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+            border-color: #f87171 !important;
+        }
+
+        .over-budget .credits-hint {
+            color: #991b1b;
+            font-weight: 600;
+        }
+
         @media (max-width: 400px) {
             .container {
                 padding: 16px;
@@ -423,11 +478,29 @@
             </div>
         </div>
 
-        <!-- Relationship Explanation -->
-        <div class="relationship-panel" id="relationship-panel">
-            <div class="relationship-title">💡 How it works:</div>
-            <div class="relationship-text" id="relationship-text">
-                At <strong>30 min</strong> of outside time, you get <strong>1 hour</strong> of screen time and <strong>15g</strong> of sugar. Move any slider to see how they connect!
+        <!-- Credits Panel -->
+        <div class="relationship-panel" id="credits-panel">
+            <div class="relationship-title">⭐ Your Credits</div>
+            <div class="credits-display">
+                <div class="credits-row">
+                    <span class="credits-label">Earned from exercise:</span>
+                    <span class="credits-value" id="credits-earned">0</span>
+                </div>
+                <div class="credits-row">
+                    <span class="credits-label">Spent on screen time:</span>
+                    <span class="credits-value spent" id="credits-screen">0</span>
+                </div>
+                <div class="credits-row">
+                    <span class="credits-label">Spent on sugar:</span>
+                    <span class="credits-value spent" id="credits-sugar">0</span>
+                </div>
+                <div class="credits-row total">
+                    <span class="credits-label">Remaining:</span>
+                    <span class="credits-value" id="credits-remaining">0</span>
+                </div>
+            </div>
+            <div class="credits-hint" id="credits-hint">
+                Do more exercise to earn credits, then choose how to spend them!
             </div>
         </div>
 
@@ -549,6 +622,21 @@
             return clamp(Math.round(totalExercise / 5) * 5, LIMITS.exercise.min, LIMITS.exercise.max);
         }
 
+        function calculateCredits(exercise) {
+            // Each 30 min above default earns 1 credit
+            // Each 30 min below default costs 1 credit
+            const diff = exercise - DEFAULTS.exercise;
+            return diff / 30;
+        }
+
+        function calculateCreditsSpent(screen, sugar) {
+            // Screen: each 15 min above default costs 0.5 credits
+            const screenCredits = (screen - DEFAULTS.screen) / 15 * 0.5;
+            // Sugar: each 10g above default costs 0.5 credits
+            const sugarCredits = (sugar - DEFAULTS.sugar) / 10 * 0.5;
+            return { screenCredits, sugarCredits, total: screenCredits + sugarCredits };
+        }
+
         function handleSliderChange(changed) {
             lastChanged = changed;
 
@@ -556,42 +644,22 @@
             const screen = parseInt(screenSlider.value);
             const sugar = parseInt(sugarSlider.value);
 
+            // Calculate available credits from exercise
+            const availableCredits = calculateCredits(exercise);
+            const spent = calculateCreditsSpent(screen, sugar);
+
             if (changed === 'exercise') {
-                // Exercise changed - move BOTH screen and sugar together
-                const allowed = calculateFromExercise(exercise);
-
-                // Set both screen and sugar to their new values based on exercise
-                screenSlider.value = allowed.screen;
-                sugarSlider.value = allowed.sugar;
-
-                // Animate link indicators
+                // Exercise changed - keep screen and sugar where they are
+                // User decides how to spend their credits
                 animateLink('link1');
                 animateLink('link2');
 
             } else if (changed === 'screen') {
-                // Screen changed - adjust exercise, then recalculate sugar based on new exercise
-                const exerciseDiff = (screen - DEFAULTS.screen) / 15 * 30;
-                const newExercise = clamp(Math.round((DEFAULTS.exercise + exerciseDiff) / 5) * 5, LIMITS.exercise.min, LIMITS.exercise.max);
-                exerciseSlider.value = newExercise;
-
-                // Now adjust sugar based on new exercise level
-                const allowed = calculateFromExercise(newExercise);
-                sugarSlider.value = allowed.sugar;
-
+                // Screen changed - check if over budget
                 animateLink('link1');
-                animateLink('link2');
 
             } else if (changed === 'sugar') {
-                // Sugar changed - adjust exercise, then recalculate screen based on new exercise
-                const exerciseDiff = (sugar - DEFAULTS.sugar) / 10 * 30;
-                const newExercise = clamp(Math.round((DEFAULTS.exercise + exerciseDiff) / 5) * 5, LIMITS.exercise.min, LIMITS.exercise.max);
-                exerciseSlider.value = newExercise;
-
-                // Now adjust screen based on new exercise level
-                const allowed = calculateFromExercise(newExercise);
-                screenSlider.value = allowed.screen;
-
-                animateLink('link1');
+                // Sugar changed - check if over budget
                 animateLink('link2');
             }
 
@@ -624,19 +692,48 @@
             updateChangeIndicator('screen', screen, DEFAULTS.screen, false);
             updateChangeIndicator('sugar', sugar, DEFAULTS.sugar, false);
 
-            // Update allowed info
-            const allowed = calculateFromExercise(exercise);
-            document.getElementById('screen-info').textContent = `Max allowed: ${formatTime(allowed.screen)}`;
-            document.getElementById('sugar-info').textContent = `Max allowed: ${allowed.sugar}g`;
-            document.getElementById('exercise-info').textContent = exercise >= 30
-                ? (exercise > 30 ? `+${exercise - 30} min bonus!` : `Minimum met!`)
-                : `${30 - exercise} min below minimum`;
+            // Calculate and display credits
+            const earned = calculateCredits(exercise);
+            const spent = calculateCreditsSpent(screen, sugar);
+            const remaining = earned - spent.total;
 
-            // Update relationship text
-            updateRelationshipText(exercise, screen, sugar);
+            document.getElementById('credits-earned').textContent = earned >= 0 ? `+${earned.toFixed(1)}` : earned.toFixed(1);
+            document.getElementById('credits-earned').className = `credits-value ${earned >= 0 ? 'positive' : 'negative'}`;
+
+            document.getElementById('credits-screen').textContent = spent.screenCredits > 0 ? `-${spent.screenCredits.toFixed(1)}` : '0';
+            document.getElementById('credits-sugar').textContent = spent.sugarCredits > 0 ? `-${spent.sugarCredits.toFixed(1)}` : '0';
+
+            document.getElementById('credits-remaining').textContent = remaining >= 0 ? `+${remaining.toFixed(1)}` : remaining.toFixed(1);
+            document.getElementById('credits-remaining').className = `credits-value ${remaining >= 0 ? 'positive' : 'negative'}`;
+
+            // Update credits panel styling based on budget
+            const creditsPanel = document.getElementById('credits-panel');
+            const hintEl = document.getElementById('credits-hint');
+
+            if (remaining < 0) {
+                creditsPanel.classList.add('over-budget');
+                hintEl.textContent = `Over budget! Add ${Math.ceil(Math.abs(remaining) * 30)} more minutes of exercise, or reduce screen/sugar.`;
+            } else if (remaining > 0) {
+                creditsPanel.classList.remove('over-budget');
+                hintEl.textContent = `You have ${remaining.toFixed(1)} credits left to spend on screen time or sugar!`;
+            } else {
+                creditsPanel.classList.remove('over-budget');
+                hintEl.textContent = `Perfectly balanced! Your credits match your choices.`;
+            }
+
+            // Update slider info
+            document.getElementById('exercise-info').textContent = exercise >= 30
+                ? (exercise > 30 ? `Earns ${earned.toFixed(1)} credits` : `Minimum met`)
+                : `${30 - exercise} min below minimum`;
+            document.getElementById('screen-info').textContent = screen > DEFAULTS.screen
+                ? `Costs ${spent.screenCredits.toFixed(1)} credits`
+                : `Default (no credits needed)`;
+            document.getElementById('sugar-info').textContent = sugar > DEFAULTS.sugar
+                ? `Costs ${spent.sugarCredits.toFixed(1)} credits`
+                : `Default (no credits needed)`;
 
             // Update message
-            updateMessage(exercise, screen, sugar);
+            updateMessage(exercise, screen, sugar, remaining);
 
             // Show screen warning if over 2 hours
             document.getElementById('screen-warning').style.display = screen > 120 ? 'flex' : 'none';
@@ -687,28 +784,28 @@
             }
         }
 
-        function updateMessage(exercise, screen, sugar) {
+        function updateMessage(exercise, screen, sugar, remaining) {
             const iconEl = document.getElementById('message-icon');
             const textEl = document.getElementById('message-text');
 
-            if (exercise >= 60) {
+            if (remaining < 0) {
+                iconEl.textContent = '⚠️';
+                textEl.textContent = 'Over budget! Adjust your choices.';
+            } else if (exercise >= 60) {
                 iconEl.textContent = '🏆';
-                textEl.textContent = 'Super active day! You earned lots of extras!';
-            } else if (exercise >= 30 && screen <= 60 && sugar <= 15) {
+                textEl.textContent = 'Super active day! Lots of credits to spend!';
+            } else if (remaining === 0 && exercise >= 30) {
                 iconEl.textContent = '🎯';
-                textEl.textContent = 'Your day is perfectly balanced!';
-            } else if (exercise >= 45) {
+                textEl.textContent = 'Perfectly balanced!';
+            } else if (remaining > 0 && exercise >= 30) {
                 iconEl.textContent = '⭐';
-                textEl.textContent = 'Great job getting your exercise in!';
-            } else if (screen === 0 && sugar <= 10) {
-                iconEl.textContent = '🌟';
-                textEl.textContent = 'Wow! Super healthy choices today!';
+                textEl.textContent = 'Looking good! Credits available to spend.';
             } else if (exercise < 30) {
                 iconEl.textContent = '💪';
-                textEl.textContent = 'Try adding more outside time!';
+                textEl.textContent = 'Need at least 30 min outside time!';
             } else {
                 iconEl.textContent = '👍';
-                textEl.textContent = 'Good choices! Keep balancing!';
+                textEl.textContent = 'Good choices!';
             }
         }
 
